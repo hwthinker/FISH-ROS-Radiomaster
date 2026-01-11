@@ -1,0 +1,251 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    FISHBOT MOTION CONTROL - GPIO MAPPING
+                          Board Version: v1.8.0
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          ESP32 GPIO PIN MAPPING                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                            I2C BUS (SHARED)                               ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║                                                                           ║
+║   GPIO 18 (SDA) ───┬─── MPU6050 IMU (0x68)      [Accelerometer+Gyro]    ║
+║                    │                                                      ║
+║                    └─── SSD1306 OLED (0x3C)     [128x64 Display]        ║
+║                                                                           ║
+║   GPIO 19 (SCL) ───┬─── MPU6050 IMU (0x68)                              ║
+║                    │                                                      ║
+║                    └─── SSD1306 OLED (0x3C)                             ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                         MOTOR CONTROL SYSTEM                              ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║                                                                           ║
+║  ┌──────────────────────────────────────────────────────────────────┐   ║
+║  │                      DRV8833 H-BRIDGE                            │   ║
+║  │                    (Dual Motor Driver)                           │   ║
+║  └──────────────────────────────────────────────────────────────────┘   ║
+║                                                                           ║
+║   MOTOR 0 (KANAN/RIGHT):                                                 ║
+║   ┌──────────────────────────────────────────────────────────────┐      ║
+║   │  GPIO 22 (MCPWM0A) ──→ DRV8833 AIN1 ──→ Motor Forward       │      ║
+║   │  GPIO 23 (MCPWM0B) ──→ DRV8833 AIN2 ──→ Motor Backward      │      ║
+║   └──────────────────────────────────────────────────────────────┘      ║
+║                                                                           ║
+║   MOTOR 1 (KIRI/LEFT):                                                   ║
+║   ┌──────────────────────────────────────────────────────────────┐      ║
+║   │  GPIO 12 (MCPWM1A) ──→ DRV8833 BIN1 ──→ Motor Forward       │      ║
+║   │  GPIO 13 (MCPWM1B) ──→ DRV8833 BIN2 ──→ Motor Backward      │      ║
+║   └──────────────────────────────────────────────────────────────┘      ║
+║                                                                           ║
+║   Motor Specifications:                                                  ║
+║   • Reduction Ratio: 40.5:1                                             ║
+║   • Pulse per Revolution: 44                                            ║
+║   • Wheel Diameter: 65mm                                                ║
+║   • Control: PWM H-Bridge                                               ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                          MOTOR ENCODERS (PCNT)                            ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║                                                                           ║
+║   ENCODER 0 (Motor Kanan):                                               ║
+║   ┌──────────────────────────────────────────────────────────────┐      ║
+║   │  GPIO 32 ──→ PCNT Unit 0 ──→ Channel A (Quadrature)         │      ║
+║   │  GPIO 33 ──→ PCNT Unit 0 ──→ Channel B (Quadrature)         │      ║
+║   └──────────────────────────────────────────────────────────────┘      ║
+║                                                                           ║
+║   ENCODER 1 (Motor Kiri):                                                ║
+║   ┌──────────────────────────────────────────────────────────────┐      ║
+║   │  GPIO 26 ──→ PCNT Unit 1 ──→ Channel A (Quadrature)         │      ║
+║   │  GPIO 25 ──→ PCNT Unit 1 ──→ Channel B (Quadrature)         │      ║
+║   └──────────────────────────────────────────────────────────────┘      ║
+║                                                                           ║
+║   Features:                                                              ║
+║   • Hardware quadrature decoding                                        ║
+║   • Direction detection                                                 ║
+║   • Velocity calculation                                                ║
+║   • Odometry publishing                                                 ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                        ULTRASONIC SENSOR (HC-SR04)                        ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║                                                                           ║
+║   ┌──────────────────────────────────────────────────────────────┐      ║
+║   │  GPIO 27 ──→ TRIG (Output) ──→ Trigger Pulse (10µs)         │      ║
+║   │  GPIO 21 ──→ ECHO (Input)  ──→ Echo Response                │      ║
+║   └──────────────────────────────────────────────────────────────┘      ║
+║                                                                           ║
+║   Specifications:                                                        ║
+║   • Range: 2cm - 400cm                                                  ║
+║   • Accuracy: ±3mm                                                      ║
+║   • Operating Voltage: 5V                                               ║
+║   • ROS Topic: sensor_msgs/Range                                        ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                   DRIVER ICs ON BOARD (ANALYSIS)                          ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║                                                                           ║
+║  ✅ DRV8833 (1 chip) - ACTIVELY USED                                     ║
+║  ┌────────────────────────────────────────────────────────────────┐     ║
+║  │ • Dual H-Bridge Motor Driver                                   │     ║
+║  │ • Voltage: 2.7V - 10.8V                                        │     ║
+║  │ • Current: 1.5A continuous (2A peak per channel)              │     ║
+║  │ • PWM Frequency: Up to 250kHz                                  │     ║
+║  │ • Controls: 2 DC Motors (Motor 0 & Motor 1)                   │     ║
+║  └────────────────────────────────────────────────────────────────┘     ║
+║                                                                           ║
+║  ⚠️  ULN2003A (2 chips) - NOT USED IN CURRENT FIRMWARE                  ║
+║  ┌────────────────────────────────────────────────────────────────┐     ║
+║  │ • Darlington Transistor Array (7 channels each)               │     ║
+║  │ • Current: 500mA per channel                                   │     ║
+║  │ • Typical Use: Stepper motors, Relays, Solenoids             │     ║
+║  │ • Status: Reserved for future expansion                       │     ║
+║  │ • Possible Applications:                                       │     ║
+║  │   - 28BYJ-48 Stepper motor control                           │     ║
+║  │   - Relay modules                                             │     ║
+║  │   - High-current LED strips                                   │     ║
+║  │   - Additional motor control                                  │     ║
+║  └────────────────────────────────────────────────────────────────┘     ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                        CONTROL FLOW DIAGRAM                               ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║                                                                           ║
+║                      ROS2 /cmd_vel (Twist)                               ║
+║                              ↓                                            ║
+║                    ┌─────────────────┐                                   ║
+║                    │ Inverse         │                                   ║
+║                    │ Kinematics      │                                   ║
+║                    └─────────────────┘                                   ║
+║                              ↓                                            ║
+║              Target Motor Speed (rad/s)                                  ║
+║                      ↙          ↘                                        ║
+║           Motor 0 Target    Motor 1 Target                              ║
+║                ↓                    ↓                                     ║
+║         ┌──────────┐          ┌──────────┐                              ║
+║         │   PID    │          │   PID    │                              ║
+║         │Controller│          │Controller│                              ║
+║         │ Kp=0.625 │          │ Kp=0.625 │                              ║
+║         │ Ki=0.125 │          │ Ki=0.125 │                              ║
+║         └──────────┘          └──────────┘                              ║
+║                ↓                    ↓                                     ║
+║         PWM Output (-100 to +100)                                        ║
+║                ↓                    ↓                                     ║
+║         ┌──────────┐          ┌──────────┐                              ║
+║         │ DRV8833  │          │ DRV8833  │                              ║
+║         │ AIN1,AIN2│          │ BIN1,BIN2│                              ║
+║         └──────────┘          └──────────┘                              ║
+║                ↓                    ↓                                     ║
+║         ┌──────────┐          ┌──────────┐                              ║
+║         │ Motor 0  │          │ Motor 1  │                              ║
+║         │  (Right) │          │  (Left)  │                              ║
+║         └──────────┘          └──────────┘                              ║
+║                ↓                    ↓                                     ║
+║         ┌──────────┐          ┌──────────┐                              ║
+║         │Encoder 0 │          │Encoder 1 │                              ║
+║         │PCNT Unit0│          │PCNT Unit1│                              ║
+║         │GPIO 32,33│          │GPIO 26,25│                              ║
+║         └──────────┘          └──────────┘                              ║
+║                ↓                    ↓                                     ║
+║              Actual Speed (rad/s)                                        ║
+║                      ↓                                                    ║
+║              Back to PID (Closed Loop)                                   ║
+║                      ↓                                                    ║
+║              ROS2 /odom (Odometry)                                       ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         GPIO SUMMARY TABLE                                  │
+├────────┬─────────────────────────┬───────────────┬─────────────────────────┤
+│  GPIO  │       Function          │  Peripheral   │        Notes            │
+├────────┼─────────────────────────┼───────────────┼─────────────────────────┤
+│   18   │ IMU SDA / OLED SDA     │ I2C (Shared)  │ Bus I2C bersama         │
+│   19   │ IMU SCL / OLED SCL     │ I2C (Shared)  │ Bus I2C bersama         │
+│   21   │ Ultrasonic ECHO        │ GPIO Input    │ HC-SR04 Echo            │
+│   25   │ Encoder 1 B            │ PCNT Unit 1   │ Motor Kiri Ch.B         │
+│   26   │ Encoder 1 A            │ PCNT Unit 1   │ Motor Kiri Ch.A         │
+│   27   │ Ultrasonic TRIG        │ GPIO Output   │ HC-SR04 Trigger         │
+│   12   │ Motor 1 A              │ MCPWM1A       │ Motor Kiri Forward      │
+│   13   │ Motor 1 B              │ MCPWM1B       │ Motor Kiri Backward     │
+│   22   │ Motor 0 A              │ MCPWM0A       │ Motor Kanan Forward     │
+│   23   │ Motor 0 B              │ MCPWM0B       │ Motor Kanan Backward    │
+│   32   │ Encoder 0 A            │ PCNT Unit 0   │ Motor Kanan Ch.A        │
+│   33   │ Encoder 0 B            │ PCNT Unit 0   │ Motor Kanan Ch.B        │
+└────────┴─────────────────────────┴───────────────┴─────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           ROS2 TOPICS                                       │
+├──────────────────┬─────────────────────────┬──────────────────────────────┤
+│      Topic       │      Message Type       │         Description          │
+├──────────────────┼─────────────────────────┼──────────────────────────────┤
+│   /cmd_vel       │ geometry_msgs/Twist     │ Subscribe: Velocity commands │
+│   /odom          │ nav_msgs/Odometry       │ Publish: Encoder odometry    │
+│   /imu           │ sensor_msgs/Imu         │ Publish: IMU 6-axis data     │
+│   /ultrasonic    │ sensor_msgs/Range       │ Publish: Distance measurement│
+└──────────────────┴─────────────────────────┴──────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        PID CONTROLLER SETTINGS                              │
+├──────────────────┬──────────────────────────────────────────────────────────┤
+│    Parameter     │                      Value                               │
+├──────────────────┼──────────────────────────────────────────────────────────┤
+│   Kp             │  0.625  (Proportional Gain)                             │
+│   Ki             │  0.125  (Integral Gain)                                 │
+│   Kd             │  0.0    (Derivative Gain)                               │
+│   Output Min     │  -100   (PWM minimum %)                                 │
+│   Output Max     │  +100   (PWM maximum %)                                 │
+└──────────────────┴──────────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     AVAILABLE GPIO FOR EXPANSION                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  Free GPIOs yang dapat digunakan untuk ekspansi fitur:                     │
+│                                                                             │
+│  • GPIO 4, 5      - General purpose I/O                                    │
+│  • GPIO 14, 16    - General purpose I/O                                    │
+│  • GPIO 17        - General purpose I/O (avoid if using PSRAM)            │
+│  • GPIO 34, 35    - Input only (ADC1)                                      │
+│  • GPIO 36, 39    - Input only (ADC1, VP/VN)                              │
+│                                                                             │
+│  ⚠️  Hindari GPIO berikut (Strapping pins):                               │
+│  • GPIO 0  - Boot mode selection                                          │
+│  • GPIO 2  - Boot mode selection                                          │
+│  • GPIO 15 - Boot mode selection                                          │
+│                                                                             │
+│  💡 Untuk ULN2003A stepper control, pertimbangkan:                         │
+│     GPIO 4, 5, 14, 16 (4 pins untuk stepper control)                      │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                            SOURCE REPOSITORY
+                https://github.com/fishros/fishbot_motion_control_microros
+                           Board Version: v1.8.0
+═══════════════════════════════════════════════════════════════════════════════
+
+Generated: October 2025
+FishBot Motion Control MicroROS - Complete GPIO Mapping Documentation
